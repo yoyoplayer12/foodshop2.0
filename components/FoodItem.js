@@ -2,21 +2,31 @@
 import { StyleSheet, Text, View, FlatList, TextInput } from 'react-native';
 import apiKey from '../apiKey';
 
+
 const Post = "https://yorickdv.be/wp-json/wp/v2/posts/"
 
-function FoodItem(props){
+
+
+
+const FoodItem = ({ title }) => {
     return(
-        <View>
-            <Text style={styles.title}>{props.title}</Text>
+        <View style={styles.post}>
+            <Text style={styles.title}>{title}</Text>
         </View>
     )
 }
-
 
 const styles = StyleSheet.create({
     title: {
       fontSize: 30,
       fontWeight: 'bold',
     },
+    post: {
+      flex: 1,
+      borderWidth: 1,
+      borderColor: "black",
+      marginTop: 10,
+      width: '45%',
+    }
   });
 export default FoodItem;

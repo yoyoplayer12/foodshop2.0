@@ -1,17 +1,28 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, VirtualizedList, SafeAreaView } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import apiKey from '../apiKey';
-import FoodItem from '../components/FoodItem.js';
+import FoodItem from '../components/FoodItem';
 
 const Post = "https://yorickdv.be/wp-json/wp/v2/posts/"
 let PostNum = -1
+const foodInfo = [
+]
+let titleNum = 0
 
 const FoodScreen = navigation =>{
+
+const getItem = (data, index) => ({
+  id: Math.random().toString(12).substring(0),
+  title: `Item ${index+1}`
+});
+  
+const getItemCount = (data) => data.length;
+  
+
+//api ophalen info
     const [foods, setFoods] = useState([]);
-
     const getFoodsByDefault = async () => {
-
         //getting title
         try {
           const response = await fetch(Post, {
@@ -28,9 +39,10 @@ const FoodScreen = navigation =>{
             let Status = json[PostNum].status
             let Excerpt = json[PostNum].excerpt.rendered
             let Id = json[PostNum].id
-            console.log("Food: " + Title);
+            foodInfo.push([Id, Title, Status, Excerpt])
+            // console.log("Title: " + foodInfo[PostNum][1]);
           }
-          setFoods(json.results);
+          setFoods(foodInfo.results);
         } catch (error) {
           console.error(error);
         }
@@ -40,25 +52,59 @@ const FoodScreen = navigation =>{
         getFoodsByDefault();//laad foods wanneer het scherm laadt
       }, []);
 
-
-    return (
-<View style={styles.container}>
-    <Text>Open up App.js to start working on your app!</Text>
-    <FoodItem title="Food Title"></FoodItem>
-    <StatusBar style="auto" />
-</View>
-  );
+      while (titleNum < foodInfo.length){
+        return (
+          <SafeAreaView style={styles.container}>
+            <VirtualizedList
+              data={foodInfo}
+              initialNumToRender={20}
+              keyExtractor={item => item.id}
+              renderItem = {({item}) =>
+                <FoodItem
+                  id={item.id}
+                  title={foodInfo[titleNum++][1]}
+                  navigation={navigation}
+                  keyExtractor={item => item.key}
+                />
+              }
+              getItemCount={getItemCount}
+              getItem={getItem}
+            />
+          </SafeAreaView>
+        );
+      }
     }
 
-
-    
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
     justifyContent: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap'
   },
+  input: {
+    
+  }
 });
 
 export default FoodScreen;
+
+
+
+
+
+/* <View style={styles.container}>
+    <FoodItem title={PostNum}></FoodItem>
+    <StatusBar style="auto" />
+</View> */
+
+
+
+
+
+/* <TextInput
+placeholder="search Food"
+style={styles.input}
+onChangeText={getMoviesByTitleSearch}//geeft argument enteredText mee, denk aan de taskInputHandler uit de todo app.
+/> */
