@@ -9,6 +9,7 @@ let PostNum = -1
 const foodInfo = [
 ]
 let titleNum = 0
+let contentNum = 0
 
 const FoodScreen = navigation =>{
 
@@ -39,8 +40,8 @@ const getItemCount = (data) => data.length;
             let Status = json[PostNum].status
             let Excerpt = json[PostNum].excerpt.rendered
             let Id = json[PostNum].id
-            foodInfo.push([Id, Title, Status, Excerpt])
-            // console.log("Title: " + foodInfo[PostNum][1]);
+            let Content = json[PostNum].content.rendered
+            foodInfo.push([Id, Title, Status, Excerpt, Content])
           }
           setFoods(foodInfo.results);
         } catch (error) {
@@ -52,7 +53,7 @@ const getItemCount = (data) => data.length;
         getFoodsByDefault();//laad foods wanneer het scherm laadt
       }, []);
 
-      while (titleNum < foodInfo.length){
+      while (titleNum < foodInfo.length && contentNum < foodInfo.length){
         return (
           <SafeAreaView style={styles.container}>
             <VirtualizedList
@@ -63,6 +64,7 @@ const getItemCount = (data) => data.length;
                 <FoodItem
                   id={item.id}
                   title={foodInfo[titleNum++][1]}
+                  content={foodInfo[contentNum++][4]}
                   navigation={navigation}
                   keyExtractor={item => item.key}
                 />
@@ -79,9 +81,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    flexWrap: 'wrap'
   },
   input: {
     

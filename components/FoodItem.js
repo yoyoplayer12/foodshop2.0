@@ -8,25 +8,25 @@ const Post = "https://yorickdv.be/wp-json/wp/v2/posts/"
 
 
 
-const FoodItem = ({ title }) => {
+const FoodItem = ({ title, content }) => {
     return(
         <View style={styles.post}>
             <Text style={styles.title}>{title}</Text>
+            <Text style={styles.content}>{content}</Text>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     title: {
-      fontSize: 30,
+      fontSize: 35,
       fontWeight: 'bold',
     },
     post: {
-      flex: 1,
       borderWidth: 1,
       borderColor: "black",
       marginTop: 10,
-      width: '45%',
+      paddingLeft: 20
     }
   });
 export default FoodItem;
